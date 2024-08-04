@@ -1,1 +1,2 @@
-"# PersonaLLM" 
+# Run
+py main.py
