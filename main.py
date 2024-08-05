@@ -7,15 +7,14 @@ def main():
     print("is cuda torch av? : " + torch.cuda.is_available().__str__())
     os.environ["WANDB_DISABLED"] = "true"
     tokenizer, model = load_model()
-    # test_model(tokenizer, model)
+    test_model(tokenizer, model)
 
-
-    print("Loading model...")
 
 
 def load_model():
     #os.environ["HF_TOKEN"] = userdata.get('HUGGINGFACEHUB_API_TOKEN')
-
+    print("Loading model...")
+    
     model_id = "google/gemma-7b"
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -23,10 +22,17 @@ def load_model():
         bnb_4bit_compute_dtype=torch.bfloat16
     )
 
-    tokenizer = AutoTokenizer.from_pretrained(model_id, token=os.environ['HF_TOKEN'])
-    model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, 
-                                                 device_map={"":0}, token=os.environ['HF_TOKEN'])
+    # from web
+    # tokenizer = AutoTokenizer.from_pretrained(model_id, token=os.environ['HF_TOKEN'])
+    # model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, 
+    #                                              device_map={"":0}, token=os.environ['HF_TOKEN'])
     
+    # from local
+    tokenizer = AutoTokenizer.from_pretrained("./model")
+    model = AutoModelForCausalLM.from_pretrained("./model", quantization_config=bnb_config, 
+                                                 device_map={"":0})
+    
+
     return tokenizer, model
     
 
